@@ -7,16 +7,16 @@ def get_recommends_from_model(user_id, movie_id, number_movies):
     movies = pd.read_csv('../../data/ml-latest-small/movies.csv',usecols=['movieId','title'])
     movieIds = list(movies.movieId)
     #builds the movie names df
-    movies.set_index('movieId',inplace=True)
+    # movies.set_index('movieId',inplace=True)
     #edit this part to call the pickled models to get a list of recommended movie IDs
-    random.seed(99)
+    random.seed(1)
     recIds = random.sample(movieIds,number_movies)
-    
-    #builds the return list of [movieID, movie title]
-    return_list = []
-    for id_ in recIds:
-        return_list.append([id_,movies.loc[id_,'title']])
-    return_list
+    return recIds
+    #builds the return list of [[movieID, movie title]]
+    # return_list = []
+    # for id_ in recIds:
+    #     return_list.append([id_,movies.loc[id_,'title']])
+    # return return_list
 
 if __name__ == '__main__':
     pass

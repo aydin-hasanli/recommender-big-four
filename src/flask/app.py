@@ -31,15 +31,26 @@ def _recommend_movie(user_id, movie_id, number_movies):
     Returns:
         a list of list. Each pair follows the pattern [movie_id, movie_name]
     """
+    #get the recommended movie ids from pickled model
     rec_movies = test.get_recommends_from_model(user_id,movie_id,number_movies)
-    # for i,movie in enumerate(rec_movies):
-    #     id_ = movie[0]
-    #     movie[0] = get_imdbId(id_)
-    return rec_movies
+    #get a list of movies ids used in model
+    moviesdf = pd.read_csv('../../data/ml-latest-small/movies.csv',index_col='movieId')
+    
+    #build list of lists with [[imdb ID, movie title, post img link]]
+    rec_movies_list = []
+    for movie_id in rec_movies:
+        temp_list = []
+        imdbid_ = get_imdbId(movie_id)
+        temp_list.append(imdbid_)
+        temp_list.append(moviesdf.loc[movie_id,'title'])
+        temp_list.append('http://img.omdbapi.com/?apikey=ae550a04&i=tt'+str(imdbid_))
+        rec_movies_list.append(temp_list)
+    return rec_movies_list
 
 def get_imdbId(movieIds):
     #if given a list of movie IDs, returns a list of corresponding imdbIDs
     #if given one movie ID, returns the corresponding IMDB ID
+    linksdf = pd.read_csv('../../data/ml-latest-small/links.csv',index_col='movieId')
     if type(movieIds)==list:
         imdbIds = []
         for id_ in movieIds:

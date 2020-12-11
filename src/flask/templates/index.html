@@ -91,6 +91,10 @@ let send_query_json = function(query) {
     });
 };
 
+function createImageLink(imdbId) {
+      // this function takes the imdbId from results, adds 'tt' infront and returns the image link
+
+}
 // https://stackoverflow.com/a/15164958/3836903
 function createMovieTable(tableData) {
       let table = document.getElementById('movie_table');
@@ -106,6 +110,7 @@ function createMovieTable(tableData) {
       row.insertCell().textContent = "IMDB ID";
       row.insertCell().textContent = "---";
       row.insertCell().textContent = "NAME  ";
+      row.insertCell().textContent = "MOVIE POSTER  ";
       // generate table content
       tableData.forEach(function(rowData) {
         row = table.insertRow(-1);
@@ -113,6 +118,10 @@ function createMovieTable(tableData) {
           cell = row.insertCell();
           cell.textContent = cellData;
           row.insertCell().textContent = "    "; // make some room
+          var oImg = document.createElement("img"); // create an image element
+          oImg.setAttribute('src', urlToImg); // set the source url to img
+          oImg.setAttribute('alt', 'na');
+          cell.appendChild(oImg); // append the image element to a DOM element, in your case the row cell element.
         });
       });
     }
