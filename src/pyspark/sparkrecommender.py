@@ -27,7 +27,7 @@ als_model_final = ALS(userCol='userId',
                 ratingCol='rating',
                 nonnegative=True,
                 regParam=0.1,
-                rank=30
+                rank=100
                )
 
 recommender = als_model_final.fit(train)
@@ -52,7 +52,7 @@ def movie_recomendation(user=1, movie=500, number=10):
 
 if __name__ == "__main__":
     print(movie_recomendation(user=1, movie=500, number=10))
-    pickle.dump(als_model_final, open('als_model_final.pkl','wb'))
-    pickle.dump(movie_recomendation, open('als_model_final.pkl','wb'))
+    #pickle.dump(als_model_final, open('als_model_final.pkl','wb'))
+    #pickle.dump(movie_recomendation, open('movie_recomendation.pkl','wb'))
 
     
