@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Awesome Movie Recommendation</title>
+  <meta name="a content/matrix-factorization/user based recommender for movies using user data and movie ratings"
+    content="Recommendation">
+  <meta name="author" content="Zi Yang, Opa Towobola, Evgeny Grobov, Aydin Hasanli ">
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/default.css') }}">
+  <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}">
+  </script>
+  <!-- <script type="text/javascript"
+          src="{{ url_for('static', filename='app.js') }}">
+    </script> -->
+
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1 id="title">The Big Four Recommends Movies</h1>
+
+    <div class="row">
+      <p>This nifty app will recommend movies for you!</p>
+      <p>Please enter the user id, movie id and number of movies to recommend!</p>
+      <p>For example, if user 1 watched movie 10, this app will recommend additional movies for user 1</p>
+    </div>
+
+    <div class="row">
+      <div class="form-inline">
+
+        <div class="form-group">
+          <p class="form-control-static">user id:</p>
+        </div>
+        <div class="form-group">
+          <input class="form-control" id="user_id"></input>
+        </div>
+
+        <div class="form-group">
+          <p class="form-control-static">movie id:</p>
+        </div>
+        <div class="form-group">
+          <input class="form-control" id="movie_id"></input>
+        </div>
+
+        <div class="form-group">
+          <p class="form-control-static">number of movies to recommend:</p>
+        </div>
+        <div class="form-group">
+          <input class="form-control" id="number_movies"></input>
+        </div>
+
+        <div class="form-group">
+          <button id="recommend" class="btn-primary">Recommend Movies!</button>
+          <button id="clear" class="btn-primary">Clear!</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <p> The recommended movie(s) is(are): <br />
+      <table id="movie_table"></table>
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    let get_input = function () {
+      let user_id = $("input#user_id").val()
+      let movie_id = $("input#movie_id").val()
+      let number_movies = $("input#number_movies").val()
+      return {
+        'user_id': parseInt(user_id),
+        'movie_id': parseInt(movie_id),
+        'number_movies': parseInt(number_movies)
+      }
+    };
+
+    let send_query_json = function (query) {
+      $.ajax({
+        url: '/recommend',
+        contentType: "application/json; charset=utf-8",
+        type: 'POST',
+        success: function (data) {
+          display_recommendations(data);
+        },
+        data: JSON.stringify(query)
+      });
+    };
+
+    function createImageLink(imdbId) {
+      // this function takes the imdbId from results, adds 'tt' infront and returns the image link
+
+    }
+    // https://stackoverflow.com/a/15164958/3836903
+    function createMovieTable(tableData) {
+      let table = document.getElementById('movie_table');
+      let count = table.rows.length;
+      if (count > 1) {
+        // no duplicate rendering
+        return
+      }
+      let row = {};
+      let cell = {};
+      // create table header
+      row = table.insertRow(-1);
+      row.insertCell().textContent = "IMDB ID";
+      row.insertCell().textContent = "---";
+      row.insertCell().textContent = "NAME  ";
+      row.insertCell().textContent = "MOVIE POSTER  ";
+      // generate table content
+      tableData.forEach(function (rowData) {
+        row = table.insertRow(-1);
+        rowData.slice(0, 2).forEach(function (cellData) {
+          cell = row.insertCell();
+          cell.textContent = cellData;
+          row.insertCell().textContent = "    "; // make some room
+
+        }
+        );
+        lastCell = row.cells[row.cells.length - 1];
+        let oImg = document.createElement("img"); // create an image element
+        oImg.setAttribute('src', rowData[2]); // set the source url to img
+        oImg.setAttribute('alt', 'na');
+        lastCell.appendChild(oImg); // append the image element to a DOM element, in your case the row cell element.
+      });
+    }
+
+    let display_recommendations = function (recommendation) {
+      createMovieTable(recommendation.result);
+
+    };
+
+
+    $(document).ready(function () {
+      $("button#recommend").click(function () {
+        let query = get_input();
+        send_query_json(query);
+      });
+
+      $("button#clear").click(function () {
+        $("#movie_table tr").remove();
+        $("input#user_id").val('');
+        $("input#movie_id").val('');
+        $("input#number_movies").val('');
+      })
+    })
+
+  </script>
+
+</body>
+
+</html>
