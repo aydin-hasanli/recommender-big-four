@@ -7,6 +7,7 @@ from pyspark.ml.recommendation import ALS
 from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
 from pyspark.mllib.evaluation import RegressionMetrics
+import pickle
 
 movies = pd.read_csv('../../data/ml-latest-small/movies.csv')
 ratings = pd.read_csv('../../data/ml-latest-small/ratings.csv')
@@ -17,6 +18,9 @@ only_in_test_movies_id = set(test.toPandas().movieId) - set(train.toPandas().mov
 movie_only_in_test = test.filter(test.movieId.isin(only_in_test_movies_id))
 train = train.union(movie_only_in_test)
 test = test.filter(~test.movieId.isin(only_in_test_movies_id))
+
+evaluator = RegressionEvaluator(metricName="rmse", labelCol="rating",
+                                predictionCol="prediction")
 
 als_model_final = ALS(userCol='userId',
                 itemCol='movieId',
@@ -47,5 +51,8 @@ def movie_recomendation(user=1, movie=500, number=10):
     return list_recommend
 
 if __name__ == "__main__":
+    print(movie_recomendation(user=1, movie=500, number=10))
+    pickle.dump(als_model_final, open('als_model_final.pkl','wb'))
+    pickle.dump(movie_recomendation, open('als_model_final.pkl','wb'))
 
-    print(movie_recomendation(user=1, movie=500, number=15))
+    
