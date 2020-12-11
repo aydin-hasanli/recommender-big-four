@@ -1,6 +1,7 @@
 #flask testing python script to return a list of movie Ids 
 import random
 import pandas as pd
+import pickle
 
 def get_recommends_from_model(user_id, movie_id, number_movies):
     #get a list of movies ids used in model
@@ -9,7 +10,7 @@ def get_recommends_from_model(user_id, movie_id, number_movies):
     #builds the movie names df
     # movies.set_index('movieId',inplace=True)
     #edit this part to call the pickled models to get a list of recommended movie IDs
-    random.seed(1)
+    random.seed(123)
     recIds = random.sample(movieIds,number_movies)
     return recIds
     #builds the return list of [[movieID, movie title]]
@@ -17,6 +18,7 @@ def get_recommends_from_model(user_id, movie_id, number_movies):
     # for id_ in recIds:
     #     return_list.append([id_,movies.loc[id_,'title']])
     # return return_list
-
+    # model = pickle.load(open('model.pkl','rb'))
+    
 if __name__ == '__main__':
     pass

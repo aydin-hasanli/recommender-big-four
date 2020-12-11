@@ -29,7 +29,7 @@ def _recommend_movie(user_id, movie_id, number_movies):
         movie_id (int): movie_id that the user watched
         number_movies (int): number of movies to return
     Returns:
-        a list of list. Each pair follows the pattern [movie_id, movie_name]
+        a list of list. Each follows the pattern [movie_id, movie_name, movie_poster_url]
     """
     #get the recommended movie ids from pickled model
     rec_movies = test.get_recommends_from_model(user_id,movie_id,number_movies)
@@ -40,7 +40,7 @@ def _recommend_movie(user_id, movie_id, number_movies):
     rec_movies_list = []
     for movie_id in rec_movies:
         temp_list = []
-        imdbid_ = get_imdbId(movie_id)
+        imdbid_ = str(get_imdbId(movie_id))
         temp_list.append(imdbid_)
         temp_list.append(moviesdf.loc[movie_id,'title'])
         temp_list.append('http://img.omdbapi.com/?apikey=ae550a04&i=tt'+str(imdbid_))
@@ -50,15 +50,16 @@ def _recommend_movie(user_id, movie_id, number_movies):
 def get_imdbId(movieIds):
     #if given a list of movie IDs, returns a list of corresponding imdbIDs
     #if given one movie ID, returns the corresponding IMDB ID
-    linksdf = pd.read_csv('../../data/ml-latest-small/links.csv',index_col='movieId')
-    if type(movieIds)==list:
-        imdbIds = []
-        for id_ in movieIds:
-            imdbIds.append(linksdf.loc[id_,'imdbId'])
-    elif type(movieIds)==int:
-        imdbIds = linksdf.loc[movieIds,'imdbId']
-    else:
-        pass
+    linksdf = pd.read_csv('../../data/ml-latest-small/links.csv',index_col='movieId',dtype=str)
+    # if type(movieIds)==list:
+    #     imdbIds = []
+    #     for id_ in movieIds:
+    #         imdbIds.append(linksdf.loc[id_,'imdbId'])
+    # elif type(movieIds)==str:
+    imdbIds = linksdf.loc[movieIds,'imdbId']
+    # else:
+    #     pass
+    print(imdbIds)
     return imdbIds
 
 
