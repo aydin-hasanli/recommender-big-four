@@ -3,9 +3,9 @@ from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import os,sys,inspect
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir) 
-import test
+#parent_dir = os.path.dirname(current_dir)
+#sys.path.insert(0, parent_dir) 
+import sparkrecommender
 app = Flask(__name__)
 
 
@@ -32,9 +32,9 @@ def _recommend_movie(user_id, movie_id, number_movies):
         a list of list. Each follows the pattern [movie_id, movie_name, movie_poster_url]
     """
     #get the recommended movie ids from pickled model
-    rec_movies = test.get_recommends_from_model(user_id,movie_id,number_movies)
+    rec_movies = sparkrecommender.movie_recomendation(user_id,movie_id,number_movies)
     #get a list of movies ids used in model
-    moviesdf = pd.read_csv('../../data/ml-latest-small/movies.csv',index_col='movieId')
+    moviesdf = pd.read_csv('movies.csv',index_col='movieId')
     
     #build list of lists with [[imdb ID, movie title, post img link]]
     rec_movies_list = []
@@ -50,7 +50,7 @@ def _recommend_movie(user_id, movie_id, number_movies):
 def get_imdbId(movieIds):
     #if given a list of movie IDs, returns a list of corresponding imdbIDs
     #if given one movie ID, returns the corresponding IMDB ID
-    linksdf = pd.read_csv('../../data/ml-latest-small/links.csv',index_col='movieId',dtype=str)
+    linksdf = pd.read_csv('links.csv',index_col='movieId',dtype=str)
     # if type(movieIds)==list:
     #     imdbIds = []
     #     for id_ in movieIds:
