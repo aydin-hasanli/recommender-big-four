@@ -10,7 +10,7 @@ def get_recommends_from_model(user_id, movie_id, number_movies):
     #builds the movie names df
     # movies.set_index('movieId',inplace=True)
     #edit this part to call the pickled models to get a list of recommended movie IDs
-    random.seed(123)
+    random.seed(11223)
     recIds = random.sample(movieIds,number_movies)
     return recIds
     #builds the return list of [[movieID, movie title]]
